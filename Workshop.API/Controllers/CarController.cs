@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Workshop.Application.Cars.Commands.CreateCar;
 using Workshop.Application.Cars.Dtos;
@@ -11,6 +12,7 @@ namespace Workshop.API.Controllers;
 public class CarController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
+    [Authorize]
     public async Task<ActionResult<IEnumerable<CarDto>>> GetAll([FromQuery] GetAllCarsQuery query)
     {
         var restaurants = await mediator.Send(query);
