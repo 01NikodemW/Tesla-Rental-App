@@ -17,4 +17,10 @@ internal class UsersRepository(WorkshopDbContext dbContext) : IUsersRepository
     {
         return dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
     }
+
+
+    public bool CheckIfUserWithProvidedEmailInDb(string email)
+    {
+        return dbContext.Users.Any(u => u.Email == email);
+    }
 }

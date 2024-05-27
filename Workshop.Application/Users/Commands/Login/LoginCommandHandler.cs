@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Workshop.Application.Users.Dtos;
 using Workshop.Domain.Entities;
 using Workshop.Domain.Exceptions;
 using Workshop.Domain.Repositories;
@@ -15,18 +16,16 @@ namespace Workshop.Application.Users.Commands.Login;
 public class LoginCommandHandler(
     ILogger<LoginCommandHandler> logger,
     IUsersRepository usersRepository,
-    IPasswordHasher<User> passwordHasher
-)
-    : IRequestHandler<LoginCommand, string>
+    IPasswordHasher<User> passwordHasher)
+    : IRequestHandler<LoginCommand, LoginResponse>
 {
-    public async Task<string> Handle(LoginCommand request, CancellationToken cancellationToken)
+    public async Task<LoginResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         var user = await usersRepository.GetUserByEmailAsync(request.Email);
         if (user is null)
         {
             throw new NotFoundException(nameof(User), request.Email);
         }
-
 
         var result = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
         if (result == PasswordVerificationResult.Failed)
@@ -51,6 +50,7 @@ public class LoginCommandHandler(
             signingCredentials: cred);
 
         var tokenHandler = new JwtSecurityTokenHandler();
-        return tokenHandler.WriteToken(token);
+        var generatedToken = tokenHandler.WriteToken(token);
+        return new LoginResponse(generatedToken);
     }
 }
