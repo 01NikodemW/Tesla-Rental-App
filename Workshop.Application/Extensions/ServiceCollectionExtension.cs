@@ -16,7 +16,6 @@ public static class ServiceCollectionExtensions
         services.AddValidatorsFromAssembly(applicationAssembly)
             .AddFluentValidationAutoValidation();
 
-        // services.AddScoped<IUserContext, UserContext>();
         services.AddHttpContextAccessor();
 
 

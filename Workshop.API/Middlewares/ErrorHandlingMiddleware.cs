@@ -22,6 +22,12 @@ public class ErrorHandlingMiddleware(ILogger<ErrorHandlingMiddleware> logger) : 
             context.Response.StatusCode = 403;
             await context.Response.WriteAsync("Access forbidden");
         }
+        catch (CarNotAvailableException carNotAvailable)
+        {
+            logger.LogError(carNotAvailable.Message);
+            context.Response.StatusCode = 400;
+            await context.Response.WriteAsync(carNotAvailable.Message);
+        }
         catch (Exception e)
         {
             logger.LogError(e, e.Message);

@@ -28,6 +28,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICarsRepository, CarsRepository>();
         services.AddScoped<ICountriesRepository, CountriesRepository>();
         services.AddScoped<ILocationsRepository, LocationsRepository>();
+        services.AddScoped<IReservationsRepository, ReservationsRepository>();
         services.AddScoped<IUsersRepository, UsersRepository>();
 
         services.AddAuthentication(option =>

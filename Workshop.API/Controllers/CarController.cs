@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Workshop.Application.Cars.Commands.CreateCar;
 using Workshop.Application.Cars.Dtos;
 using Workshop.Application.Cars.Queries.GetAllCars;
+using Workshop.Application.Cars.Queries.GetAvailableCars;
 
 namespace Workshop.API.Controllers;
 
@@ -24,5 +25,12 @@ public class CarController(IMediator mediator) : ControllerBase
     {
         var id = await mediator.Send(command);
         return Ok(id);
+    }
+
+    [HttpGet("/api/cars/available")]
+    public async Task<ActionResult<IEnumerable<CarDto>>> GetAvailableCars([FromQuery] GetAvailableCarsQuery query)
+    {
+        var restaurants = await mediator.Send(query);
+        return Ok(restaurants);
     }
 }

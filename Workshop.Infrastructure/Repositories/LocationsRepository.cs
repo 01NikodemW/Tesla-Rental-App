@@ -12,4 +12,10 @@ internal class LocationsRepository(WorkshopDbContext dbContext) : ILocationsRepo
         var locations = await dbContext.Locations.ToListAsync();
         return locations;
     }
+
+    public async Task<Location?> GetLocationById(Guid id)
+    {
+        var location = await dbContext.Locations.FindAsync(id);
+        return location;
+    }
 }
