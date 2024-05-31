@@ -13,7 +13,7 @@ internal class CarsRepository(WorkshopDbContext dbContext) : ICarsRepository
         return cars;
     }
 
-    public async Task<int> CreateAsync(Car car)
+    public async Task<Guid> CreateAsync(Car car)
     {
         dbContext.Cars.Add(car);
         await dbContext.SaveChangesAsync();

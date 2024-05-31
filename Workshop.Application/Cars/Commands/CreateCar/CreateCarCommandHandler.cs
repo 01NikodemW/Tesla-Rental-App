@@ -10,9 +10,9 @@ public class CreateCarCommandHandler(
     ILogger<CreateCarCommandHandler> logger,
     ICarsRepository carsRepository,
     IMapper mapper
-) : IRequestHandler<CreateCarCommand, int>
+) : IRequestHandler<CreateCarCommand, Guid>
 {
-    public async Task<int> Handle(CreateCarCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(CreateCarCommand request, CancellationToken cancellationToken)
     {
         logger.LogInformation("CreateCarCommandHandler");
 

@@ -1,6 +1,8 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Workshop.Domain.Entities;
 
 namespace Workshop.Application.Extensions;
 
@@ -16,5 +18,8 @@ public static class ServiceCollectionExtensions
 
         // services.AddScoped<IUserContext, UserContext>();
         services.AddHttpContextAccessor();
+
+
+        services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
     }
 }

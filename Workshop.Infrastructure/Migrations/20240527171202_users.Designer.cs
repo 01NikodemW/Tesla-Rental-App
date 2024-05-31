@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Workshop.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using Workshop.Infrastructure.Persistence;
 namespace Workshop.Infrastructure.Migrations
 {
     [DbContext(typeof(WorkshopDbContext))]
-    partial class WorkshopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240527171202_users")]
+    partial class users
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,56 +27,23 @@ namespace Workshop.Infrastructure.Migrations
 
             modelBuilder.Entity("Workshop.Domain.Entities.Car", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
+                        .HasColumnType("int");
 
-                    b.Property<string>("ImageUrl")
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Brand")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<float>("Mileage")
-                        .HasColumnType("float");
-
-                    b.Property<int>("Model")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RentalPricePerDay")
-                        .HasColumnType("int");
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
                     b.ToTable("Cars");
-                });
-
-            modelBuilder.Entity("Workshop.Domain.Entities.Country", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Countries");
-                });
-
-            modelBuilder.Entity("Workshop.Domain.Entities.Location", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("Workshop.Domain.Entities.User", b =>
