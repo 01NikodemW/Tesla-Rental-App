@@ -26,6 +26,8 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IWorkshopSeeder, WorkshopSeeder>();
         services.AddScoped<ICarsRepository, CarsRepository>();
+        services.AddScoped<ICountriesRepository, CountriesRepository>();
+        services.AddScoped<ILocationsRepository, LocationsRepository>();
         services.AddScoped<IUsersRepository, UsersRepository>();
 
         services.AddAuthentication(option =>

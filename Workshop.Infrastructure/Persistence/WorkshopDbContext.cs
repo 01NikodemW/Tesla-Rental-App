@@ -10,5 +10,22 @@ internal class WorkshopDbContext(DbContextOptions<WorkshopDbContext> options) : 
     internal DbSet<Country> Countries { get; set; }
 
     internal DbSet<Location> Locations { get; set; }
-    // public DbSet<Reservation> Reservations { get; set; } = default!;
+    internal DbSet<Reservation> Reservations { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Reservation>()
+            .HasOne(r => r.RentalLocation)
+            .WithMany()
+            .HasForeignKey(r => r.RentalLocationId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Reservation>()
+            .HasOne(r => r.ReturnLocation)
+            .WithMany()
+            .HasForeignKey(r => r.ReturnLocationId)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
 }
