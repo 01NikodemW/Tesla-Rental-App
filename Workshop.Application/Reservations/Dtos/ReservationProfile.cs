@@ -9,5 +9,6 @@ public class ReservationProfile : Profile
     public ReservationProfile()
     {
         CreateMap<CreateReservationCommand, Reservation>();
+        CreateMap<Reservation, ReservationDto>();
     }
 }
