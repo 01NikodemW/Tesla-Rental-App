@@ -13,9 +13,10 @@ internal class UsersRepository(WorkshopDbContext dbContext) : IUsersRepository
         await dbContext.SaveChangesAsync();
     }
 
-    public Task<User?> GetUserByEmailAsync(string email)
+    public async Task<User?> GetUserByEmailAsync(string email)
     {
-        return dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+        var user = await dbContext.Users.FirstOrDefaultAsync(x=>x.Email == email);
+        return user;
     }
 
 

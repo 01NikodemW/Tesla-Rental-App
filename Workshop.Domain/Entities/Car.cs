@@ -9,4 +9,11 @@ public class Car
     public float Mileage { get; set; }
     public string ImageUrl { get; set; }
     public int RentalPricePerDay { get; set; }
+
+
+    public int CalculatePrice(DateOnly rentalDate, DateOnly returnDate)
+    {
+        var days = (returnDate.DayNumber - rentalDate.DayNumber) + 1;
+        return days * RentalPricePerDay;
+    }
 }
