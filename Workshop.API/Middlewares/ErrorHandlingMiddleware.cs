@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Workshop.Domain.Exceptions;
 
 namespace Workshop.API.Middlewares;
@@ -13,26 +14,39 @@ public class ErrorHandlingMiddleware(ILogger<ErrorHandlingMiddleware> logger) : 
         catch (NotFoundException notFound)
         {
             logger.LogError(notFound.Message);
-            context.Response.StatusCode = 404;
-            await context.Response.WriteAsync(notFound.Message);
+            await WriteErrorResponseAsync(context, 404, "Not Found", notFound.Message);
         }
-        catch (ForbidException forbid)
+        catch (UnauthorizedException unauthorizedException)
         {
-            logger.LogError(forbid.Message);
-            context.Response.StatusCode = 403;
-            await context.Response.WriteAsync("Access forbidden");
+            logger.LogError("Invalid username or password");
+            await WriteErrorResponseAsync(context, 401, "Unauthorized", "Invalid username or password");
         }
         catch (CarNotAvailableException carNotAvailable)
         {
             logger.LogError(carNotAvailable.Message);
-            context.Response.StatusCode = 400;
-            await context.Response.WriteAsync(carNotAvailable.Message);
+            await WriteErrorResponseAsync(context, 400, "Bad Request", carNotAvailable.Message);
         }
         catch (Exception e)
         {
             logger.LogError(e, e.Message);
-            context.Response.StatusCode = 500;
-            await context.Response.WriteAsync("Something went wrong");
+            await WriteErrorResponseAsync(context, 500, "Internal Server Error", "Something went wrong");
         }
+    }
+
+
+    private async Task WriteErrorResponseAsync(HttpContext context, int statusCode, string title, string message)
+    {
+        context.Response.StatusCode = statusCode;
+        context.Response.ContentType = "application/json";
+
+        var errorResponse = new
+        {
+            title,
+            status = statusCode,
+            message
+        };
+
+        var errorResponseJson = JsonSerializer.Serialize(errorResponse);
+        await context.Response.WriteAsync(errorResponseJson);
     }
 }

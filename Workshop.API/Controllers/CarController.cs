@@ -13,21 +13,20 @@ namespace Workshop.API.Controllers;
 public class CarController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
-    [Authorize]
     public async Task<ActionResult<IEnumerable<CarDto>>> GetAll([FromQuery] GetAllCarsQuery query)
     {
         var restaurants = await mediator.Send(query);
         return Ok(restaurants);
     }
 
-    [HttpPost]
-    public async Task<ActionResult<int>> Create([FromBody] CreateCarCommand command)
-    {
-        var id = await mediator.Send(command);
-        return Ok(id);
-    }
+    // [HttpPost]
+    // public async Task<ActionResult<int>> Create([FromBody] CreateCarCommand command)
+    // {
+    //     var id = await mediator.Send(command);
+    //     return Ok(id);
+    // }
 
-    [HttpGet("/api/cars/available")]
+    [HttpGet("available")]
     public async Task<ActionResult<IEnumerable<CarDto>>> GetAvailableCars([FromQuery] GetAvailableCarsQuery query)
     {
         var restaurants = await mediator.Send(query);

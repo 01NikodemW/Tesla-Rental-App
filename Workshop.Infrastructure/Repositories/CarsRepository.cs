@@ -29,11 +29,11 @@ internal class CarsRepository(WorkshopDbContext dbContext) : ICarsRepository
 
     public async Task<IEnumerable<Car>> GetAvailableCars(DateOnly rentalDate, DateOnly returnDate)
     {
-        var availableVehicles = new List<Car>();
-        var vehicles = await dbContext.Cars.ToListAsync();
-        foreach (var vehicle in vehicles)
+        var availableCars = new List<Car>();
+        var cars = await dbContext.Cars.ToListAsync();
+        foreach (var car in cars)
         {
-            var reservationDates = await GetReservationDatesByVehicle(vehicle.Id);
+            var reservationDates = await GetReservationDatesByCar(car.Id);
             var isAvailable = true;
 
             foreach (var reservationDate in reservationDates)
@@ -62,18 +62,18 @@ internal class CarsRepository(WorkshopDbContext dbContext) : ICarsRepository
 
             if (isAvailable)
             {
-                availableVehicles.Add(vehicle);
+                availableCars.Add(car);
             }
         }
 
 
-        return availableVehicles;
+        return availableCars;
     }
 
-    private async Task<IEnumerable<ReservationDatesDto>> GetReservationDatesByVehicle(Guid vehicleId)
+    private async Task<IEnumerable<ReservationDatesDto>> GetReservationDatesByCar(Guid carId)
     {
         var reservations = await dbContext.Reservations
-            .Where(x => x.CarId == vehicleId)
+            .Where(x => x.CarId == carId)
             .ToListAsync();
 
         var reservationDates = new List<ReservationDatesDto>();

@@ -44,7 +44,10 @@ public class CreateReservationCommandHandler(
             throw new CarNotAvailableException(request.CarId.ToString(), request.RentalDate, request.ReturnDate);
         }
 
+        var totalPrice = car.CalculatePrice(request.RentalDate, request.ReturnDate);
+
         var reservation = mapper.Map<Reservation>(request);
+        reservation.TotalPrice = totalPrice;
         var reservationId = await reservationsRepository.CreateReservation(reservation);
         return reservationId;
     }

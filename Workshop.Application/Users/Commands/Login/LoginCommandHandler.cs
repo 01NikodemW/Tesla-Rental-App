@@ -24,13 +24,13 @@ public class LoginCommandHandler(
         var user = await usersRepository.GetUserByEmailAsync(request.Email);
         if (user is null)
         {
-            throw new NotFoundException(nameof(User), request.Email);
+            throw new UnauthorizedException();
         }
 
         var result = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
         if (result == PasswordVerificationResult.Failed)
         {
-            throw new Exception("Invalid username or password");
+            throw new UnauthorizedException();
         }
 
         var claims = new List<Claim>()
