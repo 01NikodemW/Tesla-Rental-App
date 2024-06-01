@@ -18,8 +18,8 @@ public class ErrorHandlingMiddleware(ILogger<ErrorHandlingMiddleware> logger) : 
         }
         catch (UnauthorizedException unauthorizedException)
         {
-            logger.LogError("Invalid username or password");
-            await WriteErrorResponseAsync(context, 401, "Unauthorized", "Invalid username or password");
+            logger.LogError("Invalid email or password");
+            await WriteErrorResponseAsync(context, 401, "Unauthorized", "Invalid email or password");
         }
         catch (CarNotAvailableException carNotAvailable)
         {
