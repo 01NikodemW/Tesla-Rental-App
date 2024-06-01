@@ -5,7 +5,7 @@ export function getJWTHeader(): Record<string, string> {
   const token = localStorage.getItem("accessToken");
 
   if (!token) {
-    router.push("/authentication/login");
+    router.push("/");
   }
   return { Authorization: `Bearer ${token}` };
 }

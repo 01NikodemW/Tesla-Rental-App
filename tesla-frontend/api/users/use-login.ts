@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { LoginRequest } from "@/types/api/users/login-request";
 
 export async function login(data: LoginRequest) {
+  console.log("here");
   const response = await axiosInstance.post(
     `/api/${queryKeys.users}/login`,
     data,

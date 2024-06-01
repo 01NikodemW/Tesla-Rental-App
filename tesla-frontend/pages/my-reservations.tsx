@@ -1,50 +1,26 @@
-import { Inter } from "next/font/google";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { Reservation } from "@/types/reservation";
-import { ReservedVehicle } from "@/components/my-reservations/reserved-vehicle";
 import LogoutIcon from "@mui/icons-material/Logout";
-
-const inter = Inter({ subsets: ["latin"] });
+import { useUserReservations } from "@/api/reservations/use-user-reservations";
+import { ReservedCar } from "@/components/my-reservations/reserved-car";
 
 export default function MyReservations() {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [reservations, setReservations] = useState<Reservation[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const { userReservations, isUserReservationsFetching } =
+    useUserReservations();
 
   useEffect(() => {
-    async function getMyReservations() {
-      const response = await fetch(
-        `http://localhost:5070/Reservation/GetMyReservations`,
-        {
-          method: "GET",
-          mode: "cors",
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "http://localhost:3000",
-            Authorization: "Bearer " + localStorage.getItem("accessToken"),
-          },
-        }
-      );
-      if (!response.ok) {
-        setIsLoading(false);
-        return;
-      }
-      const data = await response.json();
-      setIsLoading(false);
-      setReservations(data);
-    }
-    if (!localStorage.getItem("accessToken")) {
-      router.push("/");
-    } else {
+    if (localStorage.getItem("accessToken")) {
       setIsAuthenticated(true);
-      getMyReservations();
+    } else {
+      setIsAuthenticated(false);
     }
-  }, []);
+  }, [router]);
 
   return (
     <>
@@ -130,9 +106,9 @@ export default function MyReservations() {
             </Box>
           </Box>
           <Box sx={{ maxHeight: "80vh", pt: 8, overflow: "scroll" }}>
-            {reservations.length > 0 && (
+            {userReservations.length > 0 && (
               <Grid container spacing={10}>
-                {reservations.map((reservation) => (
+                {userReservations.map((reservation) => (
                   <Grid
                     item
                     xs={12}
@@ -142,12 +118,12 @@ export default function MyReservations() {
                     sx={{ display: "flex", justifyContent: "center" }}
                     key={reservation.id}
                   >
-                    <ReservedVehicle reservation={reservation} />
+                    <ReservedCar reservation={reservation} />
                   </Grid>
                 ))}
               </Grid>
             )}
-            {reservations.length === 0 && (
+            {userReservations.length === 0 && (
               <Box
                 sx={{
                   width: "100%",
@@ -156,10 +132,12 @@ export default function MyReservations() {
                   pt: 20,
                 }}
               >
-                {!isLoading && (
+                {!isUserReservationsFetching && (
                   <Typography variant="h3">No reservations found</Typography>
                 )}
-                {isLoading && <Typography variant="h3">Loading...</Typography>}
+                {isUserReservationsFetching && (
+                  <Typography variant="h3">Loading...</Typography>
+                )}
               </Box>
             )}
           </Box>

@@ -1,7 +1,7 @@
 export type Reservation = {
   id: string;
   userId: string;
-  vehicle: {
+  car: {
     id: string;
     model: string;
     mileage: number;
@@ -12,12 +12,11 @@ export type Reservation = {
     id: string;
     name: string;
   };
-
   returnLocation: {
     id: string;
     name: string;
   };
-  rentalDate: Date;
-  returnDate: Date;
+  rentalDate: string;
+  returnDate: string;
   totalPrice: number;
 };

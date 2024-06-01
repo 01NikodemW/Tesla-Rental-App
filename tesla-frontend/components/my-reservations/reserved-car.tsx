@@ -2,13 +2,12 @@ import { Reservation } from "@/types/reservation";
 import { Box, Typography } from "@mui/material";
 import React, { FC } from "react";
 
-interface ReservedVehicleProps {
+interface ReservedCarProps {
   reservation: Reservation;
 }
 
-export const ReservedVehicle: FC<ReservedVehicleProps> = (props) => {
-  const { reservation } = props;
-
+export const ReservedCar: FC<ReservedCarProps> = ({ reservation }) => {
+  console.log("reservation", reservation);
   return (
     <Box
       sx={{
@@ -19,7 +18,7 @@ export const ReservedVehicle: FC<ReservedVehicleProps> = (props) => {
     >
       <Box
         sx={{
-          backgroundImage: `url(${reservation.vehicle.imageUrl})`,
+          backgroundImage: `url(${reservation.car.imageUrl})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           width: "100%",
@@ -48,9 +47,9 @@ export const ReservedVehicle: FC<ReservedVehicleProps> = (props) => {
         >
           <Typography variant="h5" sx={{ color: "black" }}>
             Tesla{" "}
-            {reservation.vehicle.model === "_3"
+            {reservation.car.model === "_3"
               ? "3"
-              : reservation.vehicle.model}
+              : reservation.car.model}
           </Typography>
           <Typography variant="h5" sx={{ color: "black" }}>
             {reservation.totalPrice}$
