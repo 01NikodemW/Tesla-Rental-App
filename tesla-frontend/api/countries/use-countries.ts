@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/api/query-keys";
-import { axiosInstance, getJWTHeader } from "@/api/axios-instance";
+import { axiosInstance } from "@/api/axios-instance";
 import { Country } from "@/types/country";
 
 export async function getCountries(): Promise<Country[]> {

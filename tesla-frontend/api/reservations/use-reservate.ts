@@ -1,16 +1,17 @@
 import { useMutation } from "@tanstack/react-query";
-import { axiosInstance } from "@/api/axios-instance";
+import { axiosInstance, getJWTHeader } from "@/api/axios-instance";
 import { queryErrorHandler } from "../query-client";
 import { queryKeys } from "../query-keys";
-import { RegisterRequest } from "@/types/api/users/register-request";
+import { ReservateCarRequest } from "@/types/api/reservations/reservate-car-request";
 
-export async function register(data: RegisterRequest) {
+export async function reservateCar(data: ReservateCarRequest) {
   const response = await axiosInstance.post(
-    `/api/${queryKeys.users}/register`,
+    `/api/${queryKeys.reservations}`,
     data,
     {
       headers: {
         "Content-Type": "application/json",
+        ...getJWTHeader(),
       },
     }
   );
@@ -18,11 +19,11 @@ export async function register(data: RegisterRequest) {
   return response.data;
 }
 
-export function useRegister(onRegisterSuccess: () => void) {
+export function useReservateCar(onReservateSuccess: () => void) {
   const { mutate } = useMutation({
-    mutationFn: (data: RegisterRequest) => register(data),
+    mutationFn: (data: ReservateCarRequest) => reservateCar(data),
     onSuccess: () => {
-      onRegisterSuccess();
+      onReservateSuccess();
     },
     onError: (error: any) => {
       queryErrorHandler(error.response.data);

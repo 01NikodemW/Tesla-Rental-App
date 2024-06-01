@@ -1,85 +1,23 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { AvailableVehicle } from "@/components/available-vehicles/available-vehicle";
-import { Vehicle } from "@/types/vehicle";
-import { Location } from "@/types/location";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { useAvailableCars } from "@/api/cars/use-available-cars";
 
 export default function AvailableVehicles() {
   const router = useRouter();
-  const [availableVehicles, setAvailableVehicles] = useState<Vehicle[]>([]);
-  const [locations, setLocations] = useState<Location[]>([]);
-  const [rentalDate, setRentalDate] = useState<Date>(new Date());
-  const [returnDate, setReturnDate] = useState<Date>(new Date());
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const rentalDate =
+    typeof router.query.rentalDate === "string" ? router.query.rentalDate : "";
 
-  useEffect(() => {
-    async function GetAvailableVehicles() {
-      const rentalDate = localStorage.getItem("rentalDate");
-      const returnDate = localStorage.getItem("returnDate");
+  const returnDate =
+    typeof router.query.returnDate === "string" ? router.query.returnDate : "";
 
-      if (!rentalDate || !returnDate) {
-        return;
-      }
-
-      setRentalDate(new Date(rentalDate));
-      setReturnDate(new Date(returnDate));
-
-      const dataRange = {
-        RentalDate: new Date(rentalDate),
-        ReturnDate: new Date(returnDate),
-      };
-      const response = await fetch(
-        `http://localhost:5070/Vehicle/GetAvailableVehicles`,
-        {
-          method: "POST",
-          mode: "cors",
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "http://localhost:3000",
-          },
-          body: JSON.stringify(dataRange),
-        }
-      );
-      if (!response.ok) {
-        setIsLoading(false);
-
-        return;
-      }
-      const data = await response.json();
-      setAvailableVehicles(data);
-      setIsLoading(false);
-    }
-
-    async function GetLocations() {
-      const response = await fetch("http://localhost:5070/Location", {
-        method: "GET",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "http://localhost:3000",
-        },
-      });
-      if (!response.ok) {
-        setIsLoading(false);
-
-        return;
-      }
-      const data = await response.json();
-      setLocations(data);
-      setIsLoading(false);
-    }
-
-    if (!localStorage.getItem("token")) {
-      router.push("/");
-    } else {
-      GetAvailableVehicles();
-      GetLocations();
-    }
-  }, []);
+  const { availableCars, isAvailableCarsFetching } = useAvailableCars({
+    rentalDate: rentalDate,
+    returnDate: returnDate,
+  });
 
   return (
     <>
@@ -156,7 +94,7 @@ export default function AvailableVehicles() {
               endIcon={<LogoutIcon />}
               sx={{ color: "white", ml: 4, border: "1px solid white", px: 2 }}
               onClick={() => {
-                localStorage.removeItem("token");
+                localStorage.removeItem("accessToken");
                 router.push("/");
               }}
             >
@@ -165,9 +103,9 @@ export default function AvailableVehicles() {
           </Box>
         </Box>
         <Box sx={{ maxHeight: "80vh", pt: 8, overflow: "scroll" }}>
-          {availableVehicles.length > 0 && (
+          {availableCars.length > 0 && (
             <Grid container spacing={5}>
-              {availableVehicles.map((vehicle) => (
+              {availableCars.map((car) => (
                 <Grid
                   item
                   xs={12}
@@ -175,11 +113,10 @@ export default function AvailableVehicles() {
                   md={6}
                   lg={6}
                   sx={{ display: "flex", justifyContent: "center" }}
-                  key={vehicle.id}
+                  key={car.id}
                 >
                   <AvailableVehicle
-                    vehicle={vehicle}
-                    locations={locations}
+                    car={car}
                     rentalDate={rentalDate}
                     returnDate={returnDate}
                   />
@@ -187,7 +124,7 @@ export default function AvailableVehicles() {
               ))}
             </Grid>
           )}
-          {availableVehicles.length === 0 && (
+          {availableCars.length === 0 && (
             <Box
               sx={{
                 width: "100%",
@@ -196,12 +133,14 @@ export default function AvailableVehicles() {
                 pt: 20,
               }}
             >
-              {!isLoading && (
+              {!isAvailableCarsFetching && (
                 <Typography variant="h3">
                   No available Tesla was found
                 </Typography>
               )}
-              {isLoading && <Typography variant="h3">Loading...</Typography>}
+              {isAvailableCarsFetching && (
+                <Typography variant="h3">Loading...</Typography>
+              )}
             </Box>
           )}
         </Box>

@@ -1,4 +1,4 @@
-export type Vehicle = {
+export type Car = {
   id: string;
   model: string;
   mileage: number;

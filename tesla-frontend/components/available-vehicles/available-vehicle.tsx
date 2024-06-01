@@ -1,28 +1,33 @@
-import { Vehicle } from "@/types/vehicle";
 import {
   Autocomplete,
   Box,
   Button,
-  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
 import React, { FC, useState } from "react";
 import { Location } from "@/types/location";
 import { useRouter } from "next/router";
+import { Car } from "@/types/car";
+import { useLocations } from "@/api/locations/use-locations";
+import { useTranslation } from "react-i18next";
+import { useReservateCar } from "@/api/reservations/use-reservate";
+import toast from "react-hot-toast";
 
 interface AvailableVehicleProps {
-  vehicle: Vehicle;
-  locations: Location[];
-  rentalDate: Date;
-  returnDate: Date;
+  car: Car;
+  rentalDate: string;
+  returnDate: string;
 }
 
-export const AvailableVehicle: FC<AvailableVehicleProps> = (props) => {
-  const { vehicle, locations, rentalDate, returnDate } = props;
-  const [openRentSuccess, setOpenRentSuccess] = useState(false);
-  const [message, setMessage] = useState("");
+export const AvailableVehicle: FC<AvailableVehicleProps> = ({
+  car,
+  rentalDate,
+  returnDate,
+}) => {
   const router = useRouter();
+  const { locations, isLocationsFetching } = useLocations();
+  const { t } = useTranslation();
 
   const [selectedRentalLocation, setSelectedRentalLocation] =
     useState<Location | null>(null);
@@ -43,32 +48,20 @@ export const AvailableVehicle: FC<AvailableVehicleProps> = (props) => {
     setSelectedReturnLocation(newValue);
   };
 
-  async function rentVehicle() {
-    const response = await fetch(
-      `http://localhost:5070/Reservation/ReserveVehicle`,
-      {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "http://localhost:3000",
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-        body: JSON.stringify({
-          vehicleId: vehicle.id,
-          rentalLocationId: selectedRentalLocation?.id,
-          returnLocationId: selectedReturnLocation?.id,
-          rentalDate: rentalDate,
-          returnDate: returnDate,
-        }),
-      }
-    );
-    if (!response.ok) {
-      return;
-    }
-    setOpenRentSuccess(true);
-    setMessage("Tesla was successfully rented!");
-  }
+  const reservateCar = useReservateCar(() => {
+    toast.success(t("Car has been reserved"));
+    router.push("/my-reservations");
+  });
+
+  const handleReservateCar = () => {
+    reservateCar({
+      carId: car.id,
+      rentalLocationId: selectedRentalLocation?.id,
+      returnLocationId: selectedReturnLocation?.id,
+      rentalDate: rentalDate,
+      returnDate: returnDate,
+    });
+  };
 
   const isButtonDisabled =
     selectedRentalLocation === null || selectedReturnLocation === null;
@@ -83,7 +76,7 @@ export const AvailableVehicle: FC<AvailableVehicleProps> = (props) => {
     >
       <Box
         sx={{
-          backgroundImage: `url(${vehicle.imageUrl})`,
+          backgroundImage: `url(${car.imageUrl})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           width: "100%",
@@ -111,10 +104,10 @@ export const AvailableVehicle: FC<AvailableVehicleProps> = (props) => {
           }}
         >
           <Typography variant="h5" sx={{ color: "black" }}>
-            Tesla {vehicle.model === "_3" ? "3" : vehicle.model}
+            Tesla {car.model === "_3" ? "3" : car.model}
           </Typography>
           <Typography variant="h5" sx={{ color: "black" }}>
-            {vehicle.rentalPricePerDay}$/day
+            {`${car.rentalPricePerDay}$/${t("day")}`}
           </Typography>
         </Box>
 
@@ -129,9 +122,10 @@ export const AvailableVehicle: FC<AvailableVehicleProps> = (props) => {
             value={selectedRentalLocation}
             onChange={handleRentalLocationChange}
             options={locations}
+            loading={isLocationsFetching}
             getOptionLabel={(option) => option.name}
             renderInput={(params) => (
-              <TextField {...params} label="Rental location" />
+              <TextField {...params} label={t("Rental location")} />
             )}
             sx={{
               width: "40%",
@@ -159,9 +153,10 @@ export const AvailableVehicle: FC<AvailableVehicleProps> = (props) => {
             value={selectedReturnLocation}
             onChange={handleReturnLocationChange}
             options={locations}
+            loading={isLocationsFetching}
             getOptionLabel={(option) => option.name}
             renderInput={(params) => (
-              <TextField {...params} label="Return location" />
+              <TextField {...params} label={t("Return location")} />
             )}
             sx={{
               width: "40%",
@@ -195,22 +190,12 @@ export const AvailableVehicle: FC<AvailableVehicleProps> = (props) => {
               border: "1px solid black",
             }}
             disabled={isButtonDisabled}
-            onClick={rentVehicle}
+            onClick={handleReservateCar}
           >
-            Rent
+            {t("Rent")}
           </Button>
         </Box>
       </Box>
-      <Snackbar
-        open={openRentSuccess}
-        autoHideDuration={3000}
-        onClose={() => {
-          setOpenRentSuccess(false);
-          setMessage("");
-          router.push("/");
-        }}
-        message={message}
-      />
     </Box>
   );
 };

@@ -28,8 +28,6 @@ export const Register: FC<RegisterProps> = ({ setLogin }) => {
 
   const { countries, isCountriesFetching } = useCountries();
 
-  console.log("countries", countries);
-
   const initialValues: RegisterRequest = {
     email: "email@gmail.com",
     password: "@Haslo123",

@@ -1,8 +1,3 @@
-/*
- * Ems.WebApp.Front
- *
- * (c) 2022 Ejsak Gorup
- */
 import axios, { AxiosRequestConfig } from "axios";
 import router from "next/router";
 
@@ -12,7 +7,7 @@ export function getJWTHeader(): Record<string, string> {
   if (!token) {
     router.push("/authentication/login");
   }
-  return { "php-auth-digest": `${token}` };
+  return { Authorization: `Bearer ${token}` };
 }
 
 const config: AxiosRequestConfig = {

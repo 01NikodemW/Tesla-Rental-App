@@ -26,7 +26,7 @@ export default function MyReservations() {
           headers: {
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "http://localhost:3000",
-            Authorization: "Bearer " + localStorage.getItem("token"),
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
           },
         }
       );
@@ -38,7 +38,7 @@ export default function MyReservations() {
       setIsLoading(false);
       setReservations(data);
     }
-    if (!localStorage.getItem("token")) {
+    if (!localStorage.getItem("accessToken")) {
       router.push("/");
     } else {
       setIsAuthenticated(true);
@@ -121,7 +121,7 @@ export default function MyReservations() {
                   px: 2,
                 }}
                 onClick={() => {
-                  localStorage.setItem("token", "");
+                  localStorage.setItem("accessToken", "");
                   router.push("/");
                 }}
               >

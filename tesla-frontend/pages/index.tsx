@@ -16,36 +16,18 @@ import { DateField } from "@mui/x-date-pickers/DateField";
 import { Login } from "@/components/home/login";
 import { Register } from "@/components/home/register";
 import { useTranslation } from "react-i18next";
+import dayjs, { Dayjs } from "dayjs";
 
 export default function Home() {
   const [rentalDate, setRentalDate] = useState<Date | null>(null);
   const [returnDate, setReturnDate] = useState<Date | null>(null);
-  const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
-  const [snackbarMessage, setSnackbarMessage] = useState<string>("");
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const router = useRouter();
   const { t } = useTranslation();
 
-  const [backgroundImages, setBackgroundImages] = useState([
-    "https://cdn.motor1.com/images/mgl/JlnNn/s1/tesla-model-s-plaid.jpg",
-    "https://electricmobility.store/wp-content/uploads/2020/06/gf-26jY-UXvx-TSb4_tesla-model-s-p100d-1920x1080-nocrop.jpg",
-    "https://wallpaperaccess.com/full/486595.jpg",
-    "https://images.hdqwalls.com/download/tesla-model-x-front-4k-5x-1920x1080.jpg",
-  ]);
-
   const [loginOrRegister, setLoginOrRegister] = useState<
-    "login" | "register" | "None"
-  >("register");
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrentImageIndex((currentIndex) =>
-        currentIndex === backgroundImages.length - 1 ? 0 : currentIndex + 1
-      );
-    }, 5000);
-
-    return () => clearInterval(intervalId);
-  }, [backgroundImages.length]);
+    "login" | "register" | "none"
+  >("none");
 
   const setLogin = () => {
     setLoginOrRegister("login");
@@ -56,34 +38,22 @@ export default function Home() {
   };
 
   const setNone = () => {
-    setLoginOrRegister("None");
+    setLoginOrRegister("none");
   };
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
+    if (localStorage.getItem("accessToken")) {
       setIsLoggedIn(true);
     } else {
       setIsLoggedIn(false);
     }
   }, [loginOrRegister]);
 
-  const handleSnackbarClose = () => {
-    setIsSnackbarOpen(false);
-    setSnackbarMessage("");
-  };
-
-  const disableSearch =
-    !rentalDate ||
-    !returnDate ||
-    rentalDate > returnDate ||
-    returnDate < new Date() ||
-    rentalDate < new Date();
-
   return (
     <>
       <Box
         sx={{
-          backgroundImage: `url(${backgroundImages[currentImageIndex]})`,
+          backgroundImage: `url(https://images.hdqwalls.com/download/tesla-model-x-front-4k-5x-1920x1080.jpg)`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           height: "100vh",
@@ -205,9 +175,13 @@ export default function Home() {
             >
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DateField
-                  label="Rental date"
-                  value={rentalDate}
-                  onChange={(newValue) => setRentalDate(newValue)}
+                  label={t("Rental date")}
+                  value={rentalDate ? dayjs(rentalDate) : null}
+                  onChange={(newValue: Dayjs | null) => {
+                    if (newValue) {
+                      setRentalDate(newValue.toDate());
+                    }
+                  }}
                   format="DD-MM-YYYY"
                   sx={{
                     mr: 2,
@@ -234,9 +208,13 @@ export default function Home() {
 
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DateField
-                  label="Return date"
-                  value={returnDate}
-                  onChange={(newValue) => setReturnDate(newValue)}
+                  label={t("Return date")}
+                  value={returnDate ? dayjs(returnDate) : null}
+                  onChange={(newValue: Dayjs | null) => {
+                    if (newValue) {
+                      setReturnDate(newValue.toDate());
+                    }
+                  }}
                   format="DD-MM-YYYY"
                   sx={{
                     mr: 2,
@@ -272,29 +250,26 @@ export default function Home() {
                     color: "white",
                   },
                 }}
-                disabled={disableSearch}
                 onClick={() => {
                   if (rentalDate && returnDate) {
                     if (!isLoggedIn) {
                       setLogin();
                       return;
                     }
-                    localStorage.setItem("rentalDate", rentalDate.toString());
-                    localStorage.setItem("returnDate", returnDate.toString());
-                    if (rentalDate > returnDate) {
-                      setIsSnackbarOpen(true);
-                      setSnackbarMessage(
-                        "Return date must be after rental date"
-                      );
-                      return;
-                    }
-                    router.push({
-                      pathname: "/available-vehicles",
-                    });
+                    const rentalDateFormatted = rentalDate
+                      .toISOString()
+                      .split("T")[0];
+                    const returnDateFormatted = rentalDate
+                      .toISOString()
+                      .split("T")[0];
+
+                    router.push(
+                      `/available-vehicles?rentalDate=${rentalDateFormatted}&returnDate=${returnDateFormatted}`
+                    );
                   }
                 }}
               >
-                Search
+                {t("Search")}
               </Button>
             </Box>
           </Box>
@@ -312,12 +287,6 @@ export default function Home() {
             )}
             {loginOrRegister === "register" && <Register setLogin={setLogin} />}
           </Box>
-          <Snackbar
-            open={isSnackbarOpen}
-            autoHideDuration={6000}
-            onClose={handleSnackbarClose}
-            message={snackbarMessage}
-          />
         </Box>
       </Box>
     </>

@@ -1,10 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
-import { axiosInstance, getJWTHeader } from "@/api/axios-instance";
-import { queryClient, queryErrorHandler } from "../query-client";
+import { axiosInstance } from "@/api/axios-instance";
+import { queryErrorHandler } from "../query-client";
 import { queryKeys } from "../query-keys";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
-import { ErrorType } from "../api-error";
 import { LoginRequest } from "@/types/api/users/login-request";
 
 export async function login(data: LoginRequest) {
@@ -26,7 +25,7 @@ export function useLogin(onLoginSuccess: () => void) {
   const { mutate } = useMutation({
     mutationFn: (data: LoginRequest) => login(data),
     onSuccess: (data, variables) => {
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("accessToken", data.token);
       toast.success(t("Welcome back!"));
       onLoginSuccess();
     },
