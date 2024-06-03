@@ -34,6 +34,7 @@ export const Register: FC<RegisterProps> = ({ setLogin }) => {
     passwordConfirmation: "@Haslo123",
     firstName: "Jan",
     lastName: "Nowak",
+    countryId: "",
   };
 
   const formik = useFormik({
@@ -45,6 +46,7 @@ export const Register: FC<RegisterProps> = ({ setLogin }) => {
         passwordConfirmation: values.passwordConfirmation,
         firstName: values.firstName,
         lastName: values.lastName,
+        countryId: selectedCountry?.id || values.countryId,
       });
     },
   });

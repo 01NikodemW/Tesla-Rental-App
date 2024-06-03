@@ -12,4 +12,10 @@ internal class CountriesRepository(WorkshopDbContext dbContext) : ICountriesRepo
         var countries = await dbContext.Countries.ToListAsync();
         return countries;
     }
+
+    public async Task<Country?> GetCountryById(Guid id)
+    {
+        var country = await dbContext.Countries.FirstOrDefaultAsync(c => c.Id == id);
+        return country;
+    }
 }

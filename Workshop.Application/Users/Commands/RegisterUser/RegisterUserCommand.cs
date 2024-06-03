@@ -9,4 +9,5 @@ public class RegisterUserCommand : IRequest
     public string PasswordConfirmation { get; set; } = default!;
     public string FirstName { get; set; } = default!;
     public string LastName { get; set; } = default!;
+    public string CountryId { get; set; } = default!;
 }
