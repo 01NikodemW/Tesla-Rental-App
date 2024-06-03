@@ -4,7 +4,9 @@ using System.Text;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Workshop.Application.Extensions;
 using Workshop.Application.Users.Dtos;
 using Workshop.Domain.Entities;
 using Workshop.Domain.Exceptions;
@@ -16,7 +18,8 @@ namespace Workshop.Application.Users.Commands.Login;
 public class LoginCommandHandler(
     ILogger<LoginCommandHandler> logger,
     IUsersRepository usersRepository,
-    IPasswordHasher<User> passwordHasher)
+    IPasswordHasher<User> passwordHasher,
+    IOptions<AuthenticationSettings> options)
     : IRequestHandler<LoginCommand, LoginResponse>
 {
     public async Task<LoginResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -39,12 +42,12 @@ public class LoginCommandHandler(
             new Claim(ClaimTypes.Email, user.Email.ToString()),
         };
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YOUR_SECRET_KEY_HERE_32_BYTES_MINIMUM"));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.Value.JwtKey));
         var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        var expires = DateTime.Now.AddDays(7);
+        var expires = DateTime.Now.AddDays(options.Value.JwtExpireDays);
 
-        var token = new JwtSecurityToken("http://tesla-rental.com",
-            "http://tesla-rental.com",
+        var token = new JwtSecurityToken(options.Value.JwtIssuer,
+            options.Value.JwtAudience,
             claims,
             expires: expires,
             signingCredentials: cred);
