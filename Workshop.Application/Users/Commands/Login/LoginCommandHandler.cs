@@ -24,7 +24,8 @@ public class LoginCommandHandler(
 {
     public async Task<LoginResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        var user = await usersRepository.GetUserByEmailAsync(request.Email);
+        logger.LogInformation("LoginCommandHandler - Handling LoginCommand with email: {Email}", request.Email);
+        var user = await usersRepository.GetUserByEmailAsync(request.Email, cancellationToken);
         if (user is null)
         {
             throw new UnauthorizedException();

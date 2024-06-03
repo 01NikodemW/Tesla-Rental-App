@@ -18,7 +18,7 @@ public class GetAvailableCarsQueryHandler(
             request.RentalDate,
             request.ReturnDate
         );
-        var cars = await carsRepository.GetAvailableCars(request.RentalDate, request.ReturnDate);
+        var cars = await carsRepository.GetAvailableCars(request.RentalDate, request.ReturnDate, cancellationToken);
 
         var result = mapper.Map<IEnumerable<CarDto>>(cars);
         return result;

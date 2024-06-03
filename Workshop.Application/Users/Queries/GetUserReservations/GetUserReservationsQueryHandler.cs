@@ -15,7 +15,8 @@ public class GetUserReservationsQueryHandler(
     public async Task<IEnumerable<ReservationDto>> Handle(GetUserReservationsQuery request,
         CancellationToken cancellationToken)
     {
-        var reservations = await reservationsRepository.GetReservationsByUserId(request.UserId);
+        logger.LogInformation("Getting reservations for user with id: {UserId}", request.UserId);
+        var reservations = await reservationsRepository.GetReservationsByUserId(request.UserId, cancellationToken);
         var result = mapper.Map<IEnumerable<ReservationDto>>(reservations);
         return result;
     }

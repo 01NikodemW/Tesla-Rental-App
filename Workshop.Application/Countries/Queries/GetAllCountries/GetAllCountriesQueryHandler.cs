@@ -14,7 +14,7 @@ public class GetAllCountriesQueryHandler(
     public async Task<IEnumerable<CountryDto>> Handle(GetAllCountriesQuery request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Getting all countries");
-        var countries = await countriesRepository.GetAllCountries();
+        var countries = await countriesRepository.GetAllCountries(cancellationToken);
         var result = mapper.Map<IEnumerable<CountryDto>>(countries);
         return result;
     }

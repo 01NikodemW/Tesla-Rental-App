@@ -5,7 +5,7 @@ namespace Workshop.Application.Users.Commands.RegisterUser;
 
 public class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
 {
-    public RegisterUserCommandValidator(IUsersRepository usersRepository)
+    public RegisterUserCommandValidator(IUsersRepository usersRepository, ICountriesRepository countriesRepository)
     {
         RuleFor(dto => dto.Email)
             .EmailAddress()
@@ -30,6 +30,24 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
         RuleFor(dto => dto.PasswordConfirmation)
             .Equal(dto => dto.Password)
             .WithMessage("Passwords do not match");
+
+        RuleFor(x => x.CountryId)
+            .NotEmpty()
+            .WithMessage("CountryId is required")
+            .Custom((value, context) =>
+            {
+                if (Guid.TryParse(value.ToString(), out _) == false)
+                {
+                    context.AddFailure("CountryId", "CountryId must be a valid GUID");
+                    return;
+                }
+
+                var countryInDb = countriesRepository.CheckIfCountryWithProvidedIdInDb(Guid.Parse(value));
+                if (!countryInDb)
+                {
+                    context.AddFailure("CountryId", "Country with provided id does not exist");
+                }
+            });
 
 
         RuleFor(dto => dto.FirstName)

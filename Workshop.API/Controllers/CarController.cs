@@ -1,7 +1,5 @@
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Workshop.Application.Cars.Commands.CreateCar;
 using Workshop.Application.Cars.Dtos;
 using Workshop.Application.Cars.Queries.GetAllCars;
 using Workshop.Application.Cars.Queries.GetAvailableCars;
@@ -19,12 +17,6 @@ public class CarController(IMediator mediator) : ControllerBase
         return Ok(cars);
     }
 
-    // [HttpPost]
-    // public async Task<ActionResult<int>> Create([FromBody] CreateCarCommand command)
-    // {
-    //     var id = await mediator.Send(command);
-    //     return Ok(id);
-    // }
 
     [HttpGet("available")]
     public async Task<ActionResult<IEnumerable<CarDto>>> GetAvailableCars([FromQuery] GetAvailableCarsQuery query)

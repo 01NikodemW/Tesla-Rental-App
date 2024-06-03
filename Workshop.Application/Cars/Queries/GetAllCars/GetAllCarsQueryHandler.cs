@@ -16,7 +16,7 @@ public class GetAllCarsQueryHandler(
     public async Task<IEnumerable<CarDto>> Handle(GetAllCarsQuery request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Getting all cars");
-        var cars = await carsRepository.GetAllAsync();
+        var cars = await carsRepository.GetAllAsync(cancellationToken);
 
         var result = mapper.Map<IEnumerable<CarDto>>(cars);
         return result;

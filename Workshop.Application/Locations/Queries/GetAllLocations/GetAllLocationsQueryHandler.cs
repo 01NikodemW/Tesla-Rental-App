@@ -15,7 +15,7 @@ public class GetAllLocationsQueryHandler(
         CancellationToken cancellationToken)
     {
         logger.LogInformation("Getting all locations");
-        var locations = await locationsRepository.GetAllLocations();
+        var locations = await locationsRepository.GetAllLocations(cancellationToken);
         var result = mapper.Map<IEnumerable<LocationDto>>(locations);
         return result;
     }

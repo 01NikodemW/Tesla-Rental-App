@@ -4,8 +4,11 @@ namespace Workshop.Domain.Repositories;
 
 public interface ICarsRepository
 {
-    Task<IEnumerable<Car>> GetAllAsync();
-    Task<Car?> GetCarById(Guid id);
-    Task<IEnumerable<Car>> GetAvailableCars(DateOnly rentalDate, DateOnly returnDate);
-    Task<Guid> CreateAsync(Car car);
+    Task<IEnumerable<Car>> GetAllAsync(CancellationToken cancellationToken);
+    Task<Car?> GetCarById(Guid id, CancellationToken cancellationToken);
+
+    Task<IEnumerable<Car>> GetAvailableCars(DateOnly rentalDate, DateOnly returnDate,
+        CancellationToken cancellationToken);
+
+    Task<Guid> CreateAsync(Car car, CancellationToken cancellationToken);
 }

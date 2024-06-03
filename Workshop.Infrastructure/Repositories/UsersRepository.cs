@@ -7,15 +7,15 @@ namespace Workshop.Infrastructure.Repositories;
 
 internal class UsersRepository(WorkshopDbContext dbContext) : IUsersRepository
 {
-    public async Task RegisterUserAsync(User newUser)
+    public async Task RegisterUserAsync(User newUser, CancellationToken cancellationToken)
     {
         dbContext.Users.Add(newUser);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<User?> GetUserByEmailAsync(string email)
+    public async Task<User?> GetUserByEmailAsync(string email, CancellationToken cancellationToken)
     {
-        var user = await dbContext.Users.FirstOrDefaultAsync(x=>x.Email == email);
+        var user = await dbContext.Users.FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
         return user;
     }
 

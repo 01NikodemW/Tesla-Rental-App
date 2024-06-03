@@ -16,10 +16,12 @@ public class RegisterUserCommandHandler(
 {
     public async Task Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
-        var country = await countriesRepository.GetCountryById(Guid.Parse(request.CountryId));
+        logger.LogInformation("RegisterUserCommandHandler - Handling RegisterUserCommand with email: {Email}",
+            request.Email);
+        var country = await countriesRepository.GetCountryById(Guid.Parse(request.CountryId), cancellationToken);
         if (country == null)
         {
-            throw new NotFoundException(nameof(Country), request.CountryId);
+            throw new NotFoundException(nameof(Country), request.CountryId.ToString());
         }
 
         var newUser = new User()
@@ -33,6 +35,6 @@ public class RegisterUserCommandHandler(
 
         var passwordHash = passwordHasher.HashPassword(newUser, request.Password);
         newUser.PasswordHash = passwordHash;
-        await usersRepository.RegisterUserAsync(newUser);
+        await usersRepository.RegisterUserAsync(newUser, cancellationToken);
     }
 }
