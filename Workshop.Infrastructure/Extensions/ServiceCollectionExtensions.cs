@@ -17,11 +17,7 @@ public static class ServiceCollectionExtensions
         var connectionString = configuration.GetConnectionString("WorkshopDb");
         var serverVersion = ServerVersion.AutoDetect(connectionString);
 
-        services.AddDbContext<WorkshopDbContext>(options =>
-        {
-            options.UseMySql(connectionString, serverVersion)
-                .EnableSensitiveDataLogging();
-        });
+        services.AddDbContext<WorkshopDbContext>(options => { options.UseMySql(connectionString, serverVersion); });
 
 
         services.AddScoped<IWorkshopSeeder, WorkshopSeeder>();

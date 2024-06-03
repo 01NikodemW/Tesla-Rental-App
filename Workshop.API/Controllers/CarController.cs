@@ -15,8 +15,8 @@ public class CarController(IMediator mediator) : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CarDto>>> GetAll([FromQuery] GetAllCarsQuery query)
     {
-        var restaurants = await mediator.Send(query);
-        return Ok(restaurants);
+        var cars = await mediator.Send(query);
+        return Ok(cars);
     }
 
     // [HttpPost]
@@ -29,7 +29,7 @@ public class CarController(IMediator mediator) : ControllerBase
     [HttpGet("available")]
     public async Task<ActionResult<IEnumerable<CarDto>>> GetAvailableCars([FromQuery] GetAvailableCarsQuery query)
     {
-        var restaurants = await mediator.Send(query);
-        return Ok(restaurants);
+        var availableCars = await mediator.Send(query);
+        return Ok(availableCars);
     }
 }

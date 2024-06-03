@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { axiosInstance, getJWTHeader } from "@/api/axios-instance";
-import { queryErrorHandler } from "../query-client";
+import { queryClient, queryErrorHandler } from "../query-client";
 import { queryKeys } from "../query-keys";
 import { ReservateCarRequest } from "@/types/api/reservations/reservate-car-request";
 
@@ -24,6 +24,8 @@ export function useReservateCar(onReservateSuccess: () => void) {
     mutationFn: (data: ReservateCarRequest) => reservateCar(data),
     onSuccess: () => {
       onReservateSuccess();
+      queryClient.invalidateQueries({ queryKey: [queryKeys.cars] });
+      queryClient.invalidateQueries({ queryKey: [queryKeys.users] });
     },
     onError: (error: any) => {
       queryErrorHandler(error.response.data);

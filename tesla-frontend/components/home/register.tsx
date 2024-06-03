@@ -62,7 +62,7 @@ export const Register: FC<RegisterProps> = ({ setLogin }) => {
         }}
       >
         <Typography variant="h5" sx={{ mb: 2 }}>
-          Register
+          {t("Register form")}
         </Typography>
         <TextField
           label="Email"

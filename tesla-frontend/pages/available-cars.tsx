@@ -2,12 +2,14 @@ import { Box, Button, Grid, Typography } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import { useRouter } from "next/router";
-import { AvailableVehicle } from "@/components/available-vehicles/available-vehicle";
+import { AvailableCar } from "@/components/available-cars/available-car";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useAvailableCars } from "@/api/cars/use-available-cars";
+import { useTranslation } from "react-i18next";
 
-export default function AvailableVehicles() {
+export default function AvailableCars() {
   const router = useRouter();
+  const { t } = useTranslation();
   const rentalDate =
     typeof router.query.rentalDate === "string" ? router.query.rentalDate : "";
 
@@ -56,7 +58,7 @@ export default function AvailableVehicles() {
               router.push("/my-reservations");
             }}
           >
-            Show my rentals
+            {t("Show my rentals")}
           </Button>
           <Box
             sx={{
@@ -98,7 +100,7 @@ export default function AvailableVehicles() {
                 router.push("/");
               }}
             >
-              Logout
+              {t("Logout")}
             </Button>
           </Box>
         </Box>
@@ -115,7 +117,7 @@ export default function AvailableVehicles() {
                   sx={{ display: "flex", justifyContent: "center" }}
                   key={car.id}
                 >
-                  <AvailableVehicle
+                  <AvailableCar
                     car={car}
                     rentalDate={rentalDate}
                     returnDate={returnDate}
@@ -135,7 +137,7 @@ export default function AvailableVehicles() {
             >
               {!isAvailableCarsFetching && (
                 <Typography variant="h3">
-                  No available Tesla was found
+                  {t("No available Tesla was found")}
                 </Typography>
               )}
               {isAvailableCarsFetching && (

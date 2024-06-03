@@ -39,6 +39,12 @@ const resources = {
       "Rental date is required": "Data wypożyczenia jest wymagana",
       "Rental date must be greater than current date":
         "Data wypożyczenia musi być większa niż obecna data",
+      "No reservations found": "Nie znaleziono rezerwacji",
+      "Rental date and return date must be greater than today":
+        "Data wypożyczenia i data zwrotu muszą być większe niż dzisiaj",
+      "Rental date must be less than return date":
+        "Data wypożyczenia musi być mniejsza niż data zwrotu",
+      "No available Tesla was found": "Nie znaleziono dostępnych Tesli",
 
       Austria: "Austria",
       Belgium: "Belgia",

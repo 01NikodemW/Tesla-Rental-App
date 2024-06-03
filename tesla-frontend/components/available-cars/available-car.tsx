@@ -14,13 +14,13 @@ import { useTranslation } from "react-i18next";
 import { useReservateCar } from "@/api/reservations/use-reservate";
 import toast from "react-hot-toast";
 
-interface AvailableVehicleProps {
+interface AvailableCarProps {
   car: Car;
   rentalDate: string;
   returnDate: string;
 }
 
-export const AvailableVehicle: FC<AvailableVehicleProps> = ({
+export const AvailableCar: FC<AvailableCarProps> = ({
   car,
   rentalDate,
   returnDate,

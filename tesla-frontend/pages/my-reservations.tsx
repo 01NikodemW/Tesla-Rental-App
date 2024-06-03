@@ -6,10 +6,12 @@ import { useRouter } from "next/router";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useUserReservations } from "@/api/reservations/use-user-reservations";
 import { ReservedCar } from "@/components/my-reservations/reserved-car";
+import { useTranslation } from "react-i18next";
 
 export default function MyReservations() {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   const { userReservations, isUserReservationsFetching } =
     useUserReservations();
@@ -101,7 +103,7 @@ export default function MyReservations() {
                   router.push("/");
                 }}
               >
-                Logout
+                {t("Logout")}
               </Button>
             </Box>
           </Box>
@@ -133,7 +135,9 @@ export default function MyReservations() {
                 }}
               >
                 {!isUserReservationsFetching && (
-                  <Typography variant="h3">No reservations found</Typography>
+                  <Typography variant="h3">
+                    {t("No reservations found")}
+                  </Typography>
                 )}
                 {isUserReservationsFetching && (
                   <Typography variant="h3">Loading...</Typography>
