@@ -8,29 +8,30 @@ namespace Workshop.Infrastructure.Repositories;
 
 internal class CarsRepository(WorkshopDbContext dbContext) : ICarsRepository
 {
-    public async Task<IEnumerable<Car>> GetAllAsync()
+    public async Task<IEnumerable<Car>> GetAllAsync(CancellationToken cancellationToken)
     {
-        var cars = await dbContext.Cars.ToListAsync();
+        var cars = await dbContext.Cars.ToListAsync(cancellationToken);
         return cars;
     }
 
-    public async Task<Car?> GetCarById(Guid id)
+    public async Task<Car?> GetCarById(Guid id, CancellationToken cancellationToken)
     {
-        var car = await dbContext.Cars.FindAsync(id);
+        var car = await dbContext.Cars.FindAsync(id, cancellationToken);
         return car;
     }
 
-    public async Task<Guid> CreateAsync(Car car)
+    public async Task<Guid> CreateAsync(Car car, CancellationToken cancellationToken)
     {
         dbContext.Cars.Add(car);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(cancellationToken);
         return car.Id;
     }
 
-    public async Task<IEnumerable<Car>> GetAvailableCars(DateOnly rentalDate, DateOnly returnDate)
+    public async Task<IEnumerable<Car>> GetAvailableCars(DateOnly rentalDate, DateOnly returnDate,
+        CancellationToken cancellationToken)
     {
         var availableCars = new List<Car>();
-        var cars = await dbContext.Cars.ToListAsync();
+        var cars = await dbContext.Cars.ToListAsync(cancellationToken);
         foreach (var car in cars)
         {
             var reservationDates = await GetReservationDatesByCar(car.Id);

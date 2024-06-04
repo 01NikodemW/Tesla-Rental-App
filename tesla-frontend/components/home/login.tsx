@@ -18,8 +18,8 @@ export const Login: FC<LoginProps> = (props) => {
   const login = useLogin(setNone);
 
   const initialValues: LoginRequest = {
-    email: "test@test.com",
-    password: "@Haslo123",
+    email: "",
+    password: "",
   };
 
   const formik = useFormik({

@@ -17,6 +17,7 @@ import { Login } from "@/components/home/login";
 import { Register } from "@/components/home/register";
 import { useTranslation } from "react-i18next";
 import dayjs, { Dayjs } from "dayjs";
+import toast from "react-hot-toast";
 
 export default function Home() {
   const [rentalDate, setRentalDate] = useState<Date | null>(null);
@@ -137,7 +138,7 @@ export default function Home() {
                 endIcon={<LogoutIcon />}
                 sx={{ color: "white", ml: 4, border: "1px solid white", px: 2 }}
                 onClick={() => {
-                  localStorage.setItem("token", "");
+                  localStorage.setItem("accessToken", "");
                   router.push("/");
                   setIsLoggedIn(false);
                 }}
@@ -256,15 +257,42 @@ export default function Home() {
                       setLogin();
                       return;
                     }
-                    const rentalDateFormatted = rentalDate
+
+                    if (
+                      dayjs(rentalDate).isBefore(dayjs(), "day") ||
+                      dayjs(rentalDate).isSame(dayjs(), "day")
+                    ) {
+                      toast.error(
+                        t(
+                          "Rental date and return date must be greater than today"
+                        )
+                      );
+                      return;
+                    }
+
+                    if (dayjs(rentalDate).isAfter(dayjs(returnDate), "day")) {
+                      toast.error(
+                        t("Rental date must be less than return date")
+                      );
+                      return;
+                    }
+
+                    const rentalDatePlusOne = new Date(rentalDate);
+                    rentalDatePlusOne.setDate(rentalDatePlusOne.getDate() + 1);
+
+                    const returnDatePlusOne = new Date(returnDate);
+                    returnDatePlusOne.setDate(returnDatePlusOne.getDate() + 1);
+
+                    const rentalDateFormatted = rentalDatePlusOne
                       .toISOString()
                       .split("T")[0];
-                    const returnDateFormatted = rentalDate
+
+                    const returnDateFormatted = returnDatePlusOne
                       .toISOString()
                       .split("T")[0];
 
                     router.push(
-                      `/available-vehicles?rentalDate=${rentalDateFormatted}&returnDate=${returnDateFormatted}`
+                      `/available-cars?rentalDate=${rentalDateFormatted}&returnDate=${returnDateFormatted}`
                     );
                   }
                 }}

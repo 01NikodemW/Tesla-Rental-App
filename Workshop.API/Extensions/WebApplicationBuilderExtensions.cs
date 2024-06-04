@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Workshop.API.Middlewares;
@@ -9,7 +10,8 @@ public static class WebApplicationBuilderExtensions
     public static void AddPresentation(this WebApplicationBuilder builder)
     {
         builder.Services.AddAuthentication();
-        builder.Services.AddControllers();
+        builder.Services.AddControllers()
+            .AddJsonOptions(opt => opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
         builder.Services.AddSwaggerGen(c =>
         {
             c.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme

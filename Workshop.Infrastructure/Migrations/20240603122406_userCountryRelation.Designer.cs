@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Workshop.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using Workshop.Infrastructure.Persistence;
 namespace Workshop.Infrastructure.Migrations
 {
     [DbContext(typeof(WorkshopDbContext))]
-    partial class WorkshopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240603122406_userCountryRelation")]
+    partial class userCountryRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,9 +38,8 @@ namespace Workshop.Infrastructure.Migrations
                     b.Property<float>("Mileage")
                         .HasColumnType("float");
 
-                    b.Property<string>("Model")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<int>("Model")
+                        .HasColumnType("int");
 
                     b.Property<int>("RentalPricePerDay")
                         .HasColumnType("int");

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Workshop.Domain.Constants;
 using Workshop.Domain.Entities;
 
 namespace Workshop.Infrastructure.Persistence;
@@ -15,6 +16,12 @@ public class WorkshopDbContext(DbContextOptions<WorkshopDbContext> options) : Db
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Car>()
+            .Property(c => c.Model)
+            .HasConversion(
+                v => v.ToString(),
+                v => (TeslaModel)Enum.Parse(typeof(TeslaModel), v));
 
         modelBuilder.Entity<Reservation>()
             .HasOne(r => r.RentalLocation)

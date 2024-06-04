@@ -8,6 +8,7 @@ interface ReservedCarProps {
 
 export const ReservedCar: FC<ReservedCarProps> = ({ reservation }) => {
   console.log("reservation", reservation);
+
   return (
     <Box
       sx={{
@@ -46,10 +47,7 @@ export const ReservedCar: FC<ReservedCarProps> = ({ reservation }) => {
           }}
         >
           <Typography variant="h5" sx={{ color: "black" }}>
-            Tesla{" "}
-            {reservation.car.model === "_3"
-              ? "3"
-              : reservation.car.model}
+            Tesla {reservation.car.model === "_3" ? "3" : reservation.car.model}
           </Typography>
           <Typography variant="h5" sx={{ color: "black" }}>
             {reservation.totalPrice}$

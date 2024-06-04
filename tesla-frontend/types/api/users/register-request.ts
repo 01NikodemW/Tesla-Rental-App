@@ -4,4 +4,5 @@ export type RegisterRequest = {
   passwordConfirmation: string;
   firstName: string;
   lastName: string;
+  countryId: string;
 };

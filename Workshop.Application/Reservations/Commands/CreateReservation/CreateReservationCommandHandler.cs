@@ -27,17 +27,17 @@ public class CreateReservationCommandHandler(
             request.ReturnLocationId
         );
 
-        var car = await carsRepository.GetCarById(request.CarId);
+        var car = await carsRepository.GetCarById(request.CarId, cancellationToken);
         if (car is null) throw new NotFoundException(nameof(Car), request.CarId.ToString());
 
-        var rentalLocation = await locationsRepository.GetLocationById(request.RentalLocationId);
+        var rentalLocation = await locationsRepository.GetLocationById(request.RentalLocationId, cancellationToken);
         if (rentalLocation is null) throw new NotFoundException(nameof(Location), request.RentalLocationId.ToString());
 
-        var returnLocation = await locationsRepository.GetLocationById(request.ReturnLocationId);
+        var returnLocation = await locationsRepository.GetLocationById(request.ReturnLocationId, cancellationToken);
         if (returnLocation is null) throw new NotFoundException(nameof(Location), request.ReturnLocationId.ToString());
 
 
-        var cars = await carsRepository.GetAvailableCars(request.RentalDate, request.ReturnDate);
+        var cars = await carsRepository.GetAvailableCars(request.RentalDate, request.ReturnDate, cancellationToken);
 
         if (!cars.Any(c => c.Id == request.CarId))
         {
@@ -48,7 +48,7 @@ public class CreateReservationCommandHandler(
 
         var reservation = mapper.Map<Reservation>(request);
         reservation.TotalPrice = totalPrice;
-        var reservationId = await reservationsRepository.CreateReservation(reservation);
+        var reservationId = await reservationsRepository.CreateReservation(reservation, cancellationToken);
         return reservationId;
     }
 }
