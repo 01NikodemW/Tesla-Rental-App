@@ -35,6 +35,8 @@ Po utworzeniu struktury projektu przeszedłem do stworzenia bazy danych oraz zas
 
 Aby zapewnić odpowiednią architekturę aplikacji, wykorzystałem wzorzec CQRS, implementując go za pomocą pakietu MediatR. Dzięki temu mogłem oddzielić logikę odczytu od logiki zapisu, co umożliwiło bardziej przejrzystą i skalowalną strukturę kodu. Wykorzystanie wzorca Mediatora pozwoliło na efektywne zarządzanie zależnościami i komunikacją pomiędzy komponentami systemu.
 
+W przypadku zapytania zwracającego rezerwacje danego użytkownika dodałem również generyczną paginacje i filtrowanie po parametrach: [model samochodu, data wypożyczenia, data zwrotu, cena całkowita]
+
 Kolejnym etapem było zadbanie o odpowiednią walidację i kontrolę poprawności zachowania zapytań. W tym celu odpowiednie zapytania są walidowane za pomocą narzędzi z pakietu Fluent Validation oraz w przypadku wystąpienia wyjątków są one obsługiwane przez stworzone customowe wyjątki:
 
 - CarNotAvailableException
@@ -46,6 +48,8 @@ Dodatkowo stworzyłem RequestTimeLoggingMiddleware, który monitoruje zapytania,
 
 Aby dobrze monitorować aplikację zadbałem o logowanie wszystkich zdarzeń za pomocą narzędzia Serlilog. W pliku appsettings.Development.json zawarta jest cała konfiguracja loggera, a wszystkie zdarzenia zapisywane są do odpowiedniego pliku w katalogu Logs. Nowy plik jest tworzony tam każdego dnia w celu lepszego zarządzania logowanymi informacjami.
 
+Dokumentacja mojego API znajduje się w autogenerowanym swaggerze.
 4. Dodatkowe elementy rozwiązania
 
 W ramach rozwiązania zadania utworzyłem również front aplikacji w technologi React (Next.js), jako bibliotekę komponentów wykorzystałem Material UI, a do komunikacji z API oraz zarządzaniem stanem aplikacji wykorzystałem bibliotekę @tanstack/react-query. Każdy routing z mojego API został upakowany w customowy hook poprawiający czytelność i utrzymanie kodu.
+Na koniec dokonałem konteneryzacji mojego rozwiązania w Dockerze aby można było ja komfortowo uruchamiać.

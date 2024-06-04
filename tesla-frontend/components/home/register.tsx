@@ -29,11 +29,11 @@ export const Register: FC<RegisterProps> = ({ setLogin }) => {
   const { countries, isCountriesFetching } = useCountries();
 
   const initialValues: RegisterRequest = {
-    email: "email@gmail.com",
-    password: "@Haslo123",
-    passwordConfirmation: "@Haslo123",
-    firstName: "Jan",
-    lastName: "Nowak",
+    email: "",
+    password: "",
+    passwordConfirmation: "",
+    firstName: "",
+    lastName: "",
     countryId: "",
   };
 
@@ -91,7 +91,7 @@ export const Register: FC<RegisterProps> = ({ setLogin }) => {
         />
         <TextField
           label={t("First Name")}
-          name="fistName"
+          name="firstName"
           sx={InputStyle}
           value={formik.values.firstName}
           onChange={formik.handleChange}
@@ -113,7 +113,7 @@ export const Register: FC<RegisterProps> = ({ setLogin }) => {
           )}
           loading={isCountriesFetching}
           sx={{
-            width: "70%",
+            width: "80%",
             "& .MuiOutlinedInput-root": {
               "& fieldset": {
                 borderColor: "#ffffff",

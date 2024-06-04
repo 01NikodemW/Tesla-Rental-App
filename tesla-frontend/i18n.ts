@@ -45,6 +45,11 @@ const resources = {
       "Rental date must be less than return date":
         "Data wypożyczenia musi być mniejsza niż data zwrotu",
       "No available Tesla was found": "Nie znaleziono dostępnych Tesli",
+      "Successfully registered!": "Zarejestrowano pomyślnie!",
+      "Tesla model": "Model Tesli",
+      "Total price": "Cena całkowita",
+      Ascending: "Rosnąco",
+      Descending: "Malejąco",
 
       Austria: "Austria",
       Belgium: "Belgia",

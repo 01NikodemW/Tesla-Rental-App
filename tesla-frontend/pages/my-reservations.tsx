@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, MenuItem, Select, Typography } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import { useEffect, useState } from "react";
@@ -7,14 +7,43 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useUserReservations } from "@/api/reservations/use-user-reservations";
 import { ReservedCar } from "@/components/my-reservations/reserved-car";
 import { useTranslation } from "react-i18next";
+import { PaginationRequestData } from "@/types/pagination/pagination-request-data";
+import { queryClient } from "@/api/query-client";
+import { queryKeys } from "@/api/query-keys";
 
 export default function MyReservations() {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const { t } = useTranslation();
 
-  const { userReservations, isUserReservationsFetching } =
-    useUserReservations();
+  const [reservationsSearchParams, setReservationsSearchParams] =
+    useState<PaginationRequestData>({
+      pageNumber: 1,
+      pageSize: 20,
+      sortBy: "RentalDate",
+      sortDirection: "Ascending",
+    });
+
+  const sortByOptions = ["Car", "RentalDate", "ReturnDate", "TotalPrice"];
+
+  const generateSortByOptionsLabel = (name: string) => {
+    switch (name) {
+      case "Car":
+        return t("Tesla model");
+      case "RentalDate":
+        return t("Rental date");
+      case "ReturnDate":
+        return t("Return date");
+      case "TotalPrice":
+        return t("Total price");
+      default:
+        return name;
+    }
+  };
+
+  const { userReservations, isUserReservationsFetching } = useUserReservations(
+    reservationsSearchParams
+  );
 
   useEffect(() => {
     if (localStorage.getItem("accessToken")) {
@@ -107,10 +136,79 @@ export default function MyReservations() {
               </Button>
             </Box>
           </Box>
+
           <Box sx={{ maxHeight: "80vh", pt: 8, overflow: "scroll" }}>
-            {userReservations.length > 0 && (
+            <Box
+              sx={{
+                display: "flex",
+                gap: "24px",
+                marginLeft: "100px",
+                marginBottom: "24px",
+              }}
+            >
+              <Select
+                value={reservationsSearchParams.sortBy}
+                onChange={(e) => {
+                  queryClient.invalidateQueries({
+                    queryKey: [queryKeys.users],
+                  });
+                  setReservationsSearchParams({
+                    ...reservationsSearchParams,
+                    sortBy: e.target.value,
+                  });
+                }}
+                sx={{
+                  width: "250px",
+                  color: "black",
+                  "& .MuiSvgIcon-root": {
+                    color: "black",
+                  },
+                  "& .MuiInputBase-input": {
+                    color: "black",
+                  },
+                  backgroundColor: "rgba(255, 255, 255, 0.8)",
+                }}
+              >
+                {sortByOptions.map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {generateSortByOptionsLabel(option)}
+                  </MenuItem>
+                ))}
+              </Select>
+              <Select
+                value={reservationsSearchParams.sortDirection}
+                onChange={(e) => {
+                  queryClient.invalidateQueries({
+                    queryKey: [queryKeys.users],
+                  });
+                  setReservationsSearchParams({
+                    ...reservationsSearchParams,
+                    sortDirection: e.target.value,
+                  });
+                }}
+                sx={{
+                  color: "black",
+                  "& .MuiSvgIcon-root": {
+                    color: "black",
+                  },
+                  "& .MuiInputBase-input": {
+                    color: "black",
+                  },
+                  backgroundColor: "rgba(255, 255, 255, 0.8)",
+                }}
+              >
+                <MenuItem key={"Ascending"} value={"Ascending"}>
+                  {t("Ascending")}
+                </MenuItem>
+                <MenuItem key={"Descending"} value={"Descending"}>
+                  {t("Descending")}
+                </MenuItem>
+              </Select>
+            </Box>
+
+            {userReservations.items.length > 0 && (
               <Grid container spacing={10}>
-                {userReservations.map((reservation) => (
+                {userReservations.items.map((reservation) => (
                   <Grid
                     item
                     xs={12}
@@ -125,7 +223,7 @@ export default function MyReservations() {
                 ))}
               </Grid>
             )}
-            {userReservations.length === 0 && (
+            {userReservations.items.length === 0 && (
               <Box
                 sx={{
                   width: "100%",
