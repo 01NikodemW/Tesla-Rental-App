@@ -17,6 +17,8 @@ public static class ServiceCollectionExtensions
 
         services.AddDbContext<WorkshopDbContext>(options => { options.UseMySql(connectionString, serverVersion); });
 
+
+
         services.AddScoped<IWorkshopSeeder, WorkshopSeeder>();
         services.AddScoped<ICarsRepository, CarsRepository>();
         services.AddScoped<ICountriesRepository, CountriesRepository>();
