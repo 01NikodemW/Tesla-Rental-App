@@ -46,10 +46,11 @@ Kolejnym etapem było zadbanie o odpowiednią walidację i kontrolę poprawnoś
 Wyjątki te są przechwytywane w utworzonym ErrorHandlingMiddleware, który obsługuje je nadając im odpowiedni ErrorCode. W przypadku wystąpienia któregoś z nich zwracany jest wynik w postaci obiektu json w postaci obiektu {title,status,message};
 Dodatkowo stworzyłem RequestTimeLoggingMiddleware, który monitoruje zapytania, które trwały powyżej 4s.
 
-Aby dobrze monitorować aplikację zadbałem o logowanie wszystkich zdarzeń za pomocą narzędzia Serlilog. W pliku appsettings.Development.json zawarta jest cała konfiguracja loggera, a wszystkie zdarzenia zapisywane są do odpowiedniego pliku w katalogu Logs. Nowy plik jest tworzony tam każdego dnia w celu lepszego zarządzania logowanymi informacjami.
+Aby dobrze monitorować aplikację zadbałem o logowanie wszystkich zdarzeń za pomocą narzędzia Serlilog. Wszystkie zdarzenia zapisywane są do odpowiedniego pliku w katalogu Logs. Nowy plik jest tworzony tam każdego dnia w celu lepszego zarządzania logowanymi informacjami.
 
 Dokumentacja mojego API znajduje się w autogenerowanym swaggerze.
+
 4. Dodatkowe elementy rozwiązania
 
-W ramach rozwiązania zadania utworzyłem również front aplikacji w technologi React (Next.js), jako bibliotekę komponentów wykorzystałem Material UI, a do komunikacji z API oraz zarządzaniem stanem aplikacji wykorzystałem bibliotekę @tanstack/react-query. Każdy routing z mojego API został upakowany w customowy hook poprawiający czytelność i utrzymanie kodu.
+W ramach rozwiązania zadania utworzyłem również front aplikacji w technologi React (Next.js), jako bibliotekę komponentów wykorzystałem Material UI, a do komunikacji z API oraz zarządzaniem stanem aplikacji wykorzystałem bibliotekę @tanstack/react-query. Każdy routing z mojego API został upakowany w customowy hook poprawiający czytelność i utrzymanie kodu. Dodałem dodatkowo internacjonalizacje aby dostosować stronę do obsługi języka polskie i angielskiego. 
 Na koniec dokonałem konteneryzacji mojego rozwiązania w Dockerze aby można było ja komfortowo uruchamiać.
