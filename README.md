@@ -12,7 +12,8 @@ Aby uruchomić program wystarczy wykonać polecenie **docker-compose up**
 
 3. Podejście w rozwiązaniu zadania
 
-Pierwszym krokiem jaki poczyniłem było przeanalizowanie treści zadania, określenie założeń wyżej wymienionych. Po wykonaniu tych czynności utworzyłem schemat bazy danych, forma graficzna pozwoliła mi upewnić się, że mój tok myślenia oraz cały schemat bazy danych ma rację bytu. Chciałem jak najlepiej odwzorować rozwiązywany problem i zrzutować go na encje bazodanowe z odpowiednimi atrybutami
+Pierwszym krokiem jaki poczyniłem było przeanalizowanie treści zadania, określenie założeń wyżej wymienionych. Po wykonaniu tych czynności utworzyłem schemat bazy danych, forma graficzna pozwoliła mi upewnić się, że mój tok myślenia oraz cały schemat bazy danych ma rację bytu. Chciałem jak najlepiej odwzorować rozwiązywany problem i zrzutować go na encje bazodanowe z odpowiednimi atrybutami. Wszystkie pola w mojej bazie będą NOT NULL, a zapytania 
+trafiającego do API będą sprawdzane przez odpowiednie walidatory żeby zapewnić zgodność wymogu danych jak to żeby nie były nullami czy miały odpowiednią wartość.
 
 <p align="center">
 <img src="database-diagram.png" width="800" >
