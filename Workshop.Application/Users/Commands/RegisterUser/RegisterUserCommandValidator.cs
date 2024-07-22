@@ -51,9 +51,9 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
 
 
         RuleFor(dto => dto.FirstName)
-            .Length(3, 100);
+            .Length(3, 100).WithMessage("The length of 'First Name' must be 3 - 100 characters");
 
         RuleFor(dto => dto.LastName)
-            .Length(3, 100);
+            .Length(3, 100).WithMessage("The length of 'Last Name' must be 3 - 100 characters");
     }
 }
