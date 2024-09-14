@@ -3,6 +3,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Workshop.Application.Reservations.Commands.CreateReservation;
+using Workshop.Application.Reservations.Commands.UploadPhotos;
+using Workshop.Application.Reservations.Commands.UploadPhotosLocal;
 
 namespace Workshop.API.Controllers;
 
@@ -23,5 +25,19 @@ public class ReservationController(IMediator mediator) : ControllerBase
         }
 
         return BadRequest("Invalid user ID");
+    }
+
+    [HttpPost("photos")]
+    public async Task<ActionResult<string>> UploadPhotos([FromForm] UploadPhotosCommand command)
+    {
+        var path = await mediator.Send(command);
+        return Ok(path);
+    }
+    
+    [HttpPost("photos/local")]
+    public async Task<ActionResult<string>> UploadPhotosLocal([FromForm] UploadPhotosLocalCommand command)
+    {
+        var path = await mediator.Send(command);
+        return Ok(path);
     }
 }

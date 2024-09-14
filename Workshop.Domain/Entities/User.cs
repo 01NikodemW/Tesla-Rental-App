@@ -9,4 +9,5 @@ public class User
     public string LastName { get; set; }
     public Guid CountryId { get; set; }
     public virtual Country Country { get; set; }
+    public List<CarImage> CarImages { get; set; }
 }

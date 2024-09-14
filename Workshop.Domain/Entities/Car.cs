@@ -10,6 +10,7 @@ public class Car
     public string ImageUrl { get; set; }
     public int RentalPricePerDay { get; set; }
 
+    public List<CarImage> CarImages { get; set; }
 
     public int CalculatePrice(DateOnly rentalDate, DateOnly returnDate)
     {
